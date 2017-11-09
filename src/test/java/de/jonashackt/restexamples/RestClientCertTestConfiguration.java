@@ -22,9 +22,6 @@ import java.security.KeyStore;
 @Configuration
 public class RestClientCertTestConfiguration {
 
-    @Value(value = "classpath:keystore.jks")
-    private Resource keystoreResource;
-
     private String allPassword = "allpassword";
 
     @Bean
@@ -38,17 +35,10 @@ public class RestClientCertTestConfiguration {
 
         HttpClient client = HttpClients.custom()
                 .setSSLContext(sslContext)
-                //.setSSLHostnameVerifier(new NoopHostnameVerifier()) no certificate checking at all for https
                 .build();
 
         return builder
                 .requestFactory(new HttpComponentsClientHttpRequestFactory(client))
                 .build();
-    }
-
-    private KeyStore loadKeystore(Resource keystoreResource,  String password) throws Exception {
-        KeyStore keyStore = KeyStore.getInstance("JKS");
-        keyStore.load(keystoreResource.getInputStream(), password.toCharArray());
-        return keyStore;
     }
 }

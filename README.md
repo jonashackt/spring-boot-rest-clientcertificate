@@ -95,7 +95,7 @@ You´re promted for a password again - be sure to use __the same password__ like
 
 #### 5. create a Java Keystore, that inherits Public and Private Keys (keypair): keystore.jks
 
-Since the JDK´s keytool can´t import a Private Key directly, we need to create a importable container format first - the `keystore.p12`: 
+Since the [JDK´s keytool can´t import a Private Key directly](https://www.softteco.com/blog/create-java-keystore-file-from-existing-private-key-and-certificate/), we need to create a importable container format first - the `keystore.p12`: 
 
 ```
 openssl pkcs12 -export -in example.crt -inkey exampleprivate.key -certfile example.crt -name "examplecert" -out keystore.p12
@@ -111,11 +111,165 @@ keytool -importkeystore -srckeystore keystore.p12 -srcstoretype pkcs12 -destkeys
 You´re promted for a password again - be sure to use __the same password__ like the key´s one (I used `allpassword` here). You´re also prompted for the exportpassword, which is `allpassword` again. Then finally, we have all files ready to implement our server.
 
 
-# next steps
+# Configure the example Server
 
 Copy the generated `keystore.jks` and `truststore.jks` into `src/main/resources` and - for showing a complete Testexample - also into `src/test/resources`
 
+Also we need to configure the Server to provide the needed secured REST endpoint. There are some steps we need to take here:
+
+#### 1. Import spring-boot-starter-security
+
+Add the following to the pom.xml:
+
+```
+   <!-- we need this here for server certificate handling -->
+    <dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-security</artifactId>
+    </dependency>
+```
+
+#### 2. Configure the application.yml
+
+```
+server:
+  port: 8443
+  ssl:
+    key-store: classpath:keystore.jks
+    key-store-password: allpassword
+    trust-store: classpath:truststore.jks
+    trust-store-password: allpassword
+    client-auth: need
+security:
+  headers:
+    hsts: NONE
+```
+
+#### 3. Create @Configuration annotated WebSecurityConfig
+
+See [WebSecurityConfig.java](https://github.com/jonashackt/spring-boot-rest-clientcertificate/blob/master/src/main/java/de/jonashackt/restexamples/configuration/WebSecurityConfig.java)
+
+#### 4. Create a normal Spring MVC REST endpoint
+
+See [ServerController.java](https://github.com/jonashackt/spring-boot-rest-clientcertificate/blob/master/src/main/java/de/jonashackt/restexamples/controller/ServerController.java)
+
+
+Your Server should now be ready to serve a Client certificate secured REST endpoint.
+
+
+# Run the example Server and access it with the Spring RestTemplate
+
+To access a client certificate secured REST endpoint with the Spring RestTemplate, you also have to do a few more steps than usual:
+
+#### 1. import org.apache.httpcomponents.httpclient into the pom.xml
+
+```
+	<!-- we need httpclient here for client certificate handling -->
+	<dependency>
+		<groupId>org.apache.httpcomponents</groupId>
+		<artifactId>httpclient</artifactId>
+	</dependency>
+```
+
+#### 2. Create a @Configuration annotated class for the RestTemplate configuration:
+
+See [RestClientCertTestConfiguration.java](https://github.com/jonashackt/spring-boot-rest-clientcertificate/blob/master/src/test/java/de/jonashackt/restexamples/RestClientCertTestConfiguration.java) or directly:
+
+```
+package de.jonashackt.restexamples;
+
+import org.apache.http.client.HttpClient;
+import org.apache.http.conn.ssl.NoopHostnameVerifier;
+import org.apache.http.impl.client.HttpClients;
+import org.apache.http.ssl.SSLContextBuilder;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.web.client.RestTemplateBuilder;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.core.io.Resource;
+import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
+import org.springframework.util.ResourceUtils;
+import org.springframework.web.client.RestTemplate;
+
+import javax.net.ssl.SSLContext;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.InputStream;
+import java.security.KeyStore;
+
+@Configuration
+public class RestClientCertTestConfiguration {
+
+    private String allPassword = "allpassword";
+
+    @Bean
+    public RestTemplate restTemplate(RestTemplateBuilder builder) throws Exception {
+
+        SSLContext sslContext = SSLContextBuilder
+                .create()
+                .loadKeyMaterial(ResourceUtils.getFile("classpath:keystore.jks"), allPassword.toCharArray(), allPassword.toCharArray())
+                .loadTrustMaterial(ResourceUtils.getFile("classpath:truststore.jks"), allPassword.toCharArray())
+                .build();
+
+        HttpClient client = HttpClients.custom()
+                .setSSLContext(sslContext)
+                .build();
+
+        return builder
+                .requestFactory(new HttpComponentsClientHttpRequestFactory(client))
+                .build();
+    }
+}
+```
+
+#### 3. Create a common Test.class using the RestTemplate with @Autowired
+
+See [RestClientCertTest.java](https://github.com/jonashackt/spring-boot-rest-clientcertificate/blob/master/src/test/java/de/jonashackt/restexamples/RestClientCertTest.java) or directly:
+
+```
+package de.jonashackt.restexamples;
+
+import de.jonashackt.restexamples.controller.ServerController;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.context.embedded.LocalServerPort;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.web.client.RestTemplate;
+
+import static org.junit.Assert.assertEquals;
+
+@RunWith(SpringRunner.class)
+@SpringBootTest(
+		classes = ServerApplication.class,
+		webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT
+)
+public class RestClientCertTest {
+
+	@LocalServerPort
+	private int port;
+
+	@Autowired
+    private RestTemplate restTemplate;
+
+	@Test
+	public void is_hello_resource_callable_with_client_cert() {
+		String response = restTemplate.getForObject("https://localhost:" + port + "/restexamples/hello", String.class);
+	    
+	    assertEquals(ServerController.RESPONSE, response);
+	}
+}
+
+```
+
+That´s all! Now you can access a client certificate secured REST endpoint with the Spring RestTemplate!
+
 
 ## Links
+
+Every file extension explained: https://stackoverflow.com/a/6341566/4964553
+
+Really good graphical tool for handling all the different files: http://keystore-explorer.org/
 
 Create .key, .csr & .crt with openssl: https://www.akadia.com/services/ssh_test_certificate.html

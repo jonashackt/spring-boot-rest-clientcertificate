@@ -17,13 +17,13 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     }
 
     /*
-     * Create an in-memory authentication manager. We create 1 user (sdg which
+     * Create an in-memory authentication manager. We create 1 user (localhost which
      * is the CN of the client certificate) which has a role of USER.
      */
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
         auth.inMemoryAuthentication()
-                .withUser("sdg")
+                .withUser("localhost")
                 .password("none")
                 .roles("USER");
     }
