@@ -1,5 +1,6 @@
 REST Client uses clientcertificate to authenticate to Spring Boot Server
 =============================
+[![Build Status](https://travis-ci.org/jonashackt/spring-boot-rest-clientcertificate.svg?branch=master)](https://travis-ci.org/jonashackt/spring-boot-rest-clientcertificate)
 
 If you only frequently use some sec-technologies like me, then you maybe need a refresher to what was what in this world :) For all the file formats like .crt, .cert, .pem, .key, .pkcs12/.pfx/.p12 read this post: https://serverfault.com/a/9717
 
