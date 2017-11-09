@@ -11,7 +11,7 @@ And here´s an explanation of the difference between the 2 Java Keystore-Options
 
 For the app here, you need the following files, if you want to fully want to go through all the steps (you need `openssl`and a `jdk` installed):
 
-> Please make sure to alwasy use the same password for all artifacts! This is needed later, because Tomcat need the same password for the key and the keystores (see https://stackoverflow.com/a/23979014/4964553).
+> Please make sure to always use the same password for all artifacts! This is needed later, because Tomcat needs the same password for the key and the keystores (see https://stackoverflow.com/a/23979014/4964553).
 
 
 #### 1. generate Private Key: exampleprivate.key
