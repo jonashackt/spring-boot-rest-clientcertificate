@@ -104,6 +104,8 @@ openssl pkcs12 -export -in example.crt -inkey exampleprivate.key -certfile examp
 
 You´re promted for a password again - be sure to use __the same password__ like the key´s one (I used `allpassword` here).
 
+You could stop here and just use the `keystore.p12` instead of the `keystore.jks` variant generated in the next step. It´ up to you, the implementation also supports `.loadKeyMaterial(ResourceUtils.getFile("classpath:keystore.p12"), allPassword, allPassword)`
+
 
 ```
 keytool -importkeystore -srckeystore keystore.p12 -srcstoretype pkcs12 -destkeystore keystore.jks -deststoretype JKS
@@ -230,7 +232,7 @@ See [RestClientCertTest.java](https://github.com/jonashackt/spring-boot-rest-cli
 ```
 package de.jonashackt.restexamples;
 
-import de.jonashackt.restexamples.controller.ServerController;
+import ServerController;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;

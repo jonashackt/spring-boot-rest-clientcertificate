@@ -1,4 +1,4 @@
-package de.jonashackt.restexamples.controller;
+package de.jonashackt.controller;
 
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;

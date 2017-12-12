@@ -1,6 +1,7 @@
-package de.jonashackt.restexamples;
+package de.jonashackt;
 
-import de.jonashackt.restexamples.controller.ServerController;
+import de.jonashackt.controller.ServerController;
+import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,6 +29,6 @@ public class RestClientCertTest {
 	public void is_hello_resource_callable_with_client_cert() {
 		String response = restTemplate.getForObject("https://localhost:" + port + "/restexamples/hello", String.class);
 	    
-	    assertEquals(ServerController.RESPONSE, response);
+	    Assert.assertEquals(ServerController.RESPONSE, response);
 	}
 }
