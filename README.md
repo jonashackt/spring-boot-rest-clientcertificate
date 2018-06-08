@@ -2,6 +2,8 @@ REST Client uses clientcertificate to authenticate to Spring Boot Server
 =============================
 [![Build Status](https://travis-ci.org/jonashackt/spring-boot-rest-clientcertificate.svg?branch=master)](https://travis-ci.org/jonashackt/spring-boot-rest-clientcertificate)
 
+This project implements a basic example using Spring Boot as the certificate secured server and also as the client calling this server accordingly - everything only has one private key and certificate. If you´re looking for a more advanced example on how a Spring Boot App could call more then one secured server using multiple client certificates, have a look at this project here: [jonashackt/spring-boot-rest-clientcertificates-docker-compose](https://github.com/jonashackt/spring-boot-rest-clientcertificates-docker-compose).
+
 If you only frequently use some sec-technologies like me, then you maybe need a refresher to what was what in this world :) For all the file formats like .crt, .cert, .pem, .key, .pkcs12/.pfx/.p12 read this post: https://serverfault.com/a/9717
 
 And here´s an explanation of the difference between the 2 Java Keystore-Options (Keystore.jks and Truststore.jks): https://stackoverflow.com/a/6341566/4964553
