@@ -150,11 +150,11 @@ security:
 
 #### 3. Create @Configuration annotated WebSecurityConfig
 
-See [WebSecurityConfig.java](https://github.com/jonashackt/spring-boot-rest-clientcertificate/blob/master/src/main/java/de/jonashackt/restexamples/configuration/WebSecurityConfig.java)
+See [WebSecurityConfig.java](src/main/java/de/jonashackt/configuration/WebSecurityConfig.java)
 
 #### 4. Create a normal Spring MVC REST endpoint
 
-See [ServerController.java](https://github.com/jonashackt/spring-boot-rest-clientcertificate/blob/master/src/main/java/de/jonashackt/restexamples/controller/ServerController.java)
+See [ServerController.java](src/main/java/de/jonashackt/controller/ServerController.java)
 
 
 Your Server should now be ready to serve a Client certificate secured REST endpoint.
@@ -176,7 +176,7 @@ To access a client certificate secured REST endpoint with the Spring RestTemplat
 
 #### 2. Create a @Configuration annotated class for the RestTemplate configuration:
 
-See [RestClientCertTestConfiguration.java](https://github.com/jonashackt/spring-boot-rest-clientcertificate/blob/master/src/test/java/de/jonashackt/restexamples/RestClientCertTestConfiguration.java) or directly:
+See [RestClientCertTestConfiguration.java](src/test/java/de/jonashackt/RestClientCertTestConfiguration.java) or directly:
 
 ```
 package de.jonashackt.restexamples;
@@ -227,7 +227,7 @@ public class RestClientCertTestConfiguration {
 
 #### 3. Create a common Test.class using the RestTemplate with @Autowired
 
-See [RestClientCertTest.java](https://github.com/jonashackt/spring-boot-rest-clientcertificate/blob/master/src/test/java/de/jonashackt/restexamples/RestClientCertTest.java) or directly:
+See [RestClientCertTest.java](src/test/java/de/jonashackt/RestClientCertTest.java) or directly:
 
 ```
 package de.jonashackt.restexamples;
