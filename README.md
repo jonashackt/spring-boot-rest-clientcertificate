@@ -1,6 +1,7 @@
 REST Client uses clientcertificate to authenticate to Spring Boot Server
 =============================
-[![Build Status](https://travis-ci.org/jonashackt/spring-boot-rest-clientcertificate.svg?branch=master)](https://travis-ci.org/jonashackt/spring-boot-rest-clientcertificate)
+[![Build Status](https://github.com/jonashackt/spring-boot-rest-clientcertificate/workflows/github/badge.svg)](https://github.com/jonashackt/spring-boot-rest-clientcertificate/actions)
+[![renovateenabled](https://img.shields.io/badge/renovate-enabled-yellow)](https://renovatebot.com)
 
 This project implements a basic example using Spring Boot as the certificate secured server and also as the client calling this server accordingly - everything only has one private key and certificate. If you´re looking for a more advanced example on how a Spring Boot App could call more then one secured server using multiple client certificates, have a look at this project here: [jonashackt/spring-boot-rest-clientcertificates-docker-compose](https://github.com/jonashackt/spring-boot-rest-clientcertificates-docker-compose).
 
