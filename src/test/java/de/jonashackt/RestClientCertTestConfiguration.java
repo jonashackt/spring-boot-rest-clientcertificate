@@ -31,7 +31,7 @@ public class RestClientCertTestConfiguration {
                 .build();
 
         return builder
-                .requestFactory(new HttpComponentsClientHttpRequestFactory(client))
+                .requestFactory(() -> new HttpComponentsClientHttpRequestFactory(client))
                 .build();
     }
 }
